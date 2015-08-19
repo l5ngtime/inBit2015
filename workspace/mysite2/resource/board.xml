@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="board">
+	<typeAlias alias="BoardVo" type="com.bit2015.mysite2.vo.BoardVo" />
+	<typeAlias alias="ReplyVo" type="com.bit2015.mysite2.vo.ReplyVo" />
+
+	<select id="getTotal" resultClass="java.lang.Integer">
+		<![CDATA[select count(*) from board]]>
+	</select>
+	
+	<select id="searchTotal" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		<![CDATA[select count(*) from ((select no, count(*) over(order by no desc) from board where title like '%'||#kwd#||'%'  or content like '%'||#kwd#||'%' or member_name like '%'||#kwd#||'%') A)]]>
+	</select>
+	
+	<select id="getList" resultClass="BoardVo">
+		<![CDATA[select * from ( select A.*, rownum as rnum, floor((rownum-1)/5+1) as page, count(*) over() as totcnt from( SELECT * FROM board order by my_no desc, order_no) A) where page = #page#]]>
+	</select>
+
+	<select id="getView" resultClass="BoardVo">
+		<![CDATA[select no, view_cnt, member_no, member_name, title, content, to_char(reg_date, 'YYYY-MMDD HH:MI') as reg_date from board where no=#no#]]>
+	</select>
+	
+	<select id="getReList" parameterClass="Long" resultClass="ReplyVo">
+		<![CDATA[select no, content, member_no, member_name, to_char(reg_date, 'YYYY-MMDD HH:MI') as reg_date from reply_board where post_no=#no#]]>
+	</select>
+	
+	<select id="upView" resultClass="BoardVo">
+		<![CDATA[select no, member_no, member_name, title, content, to_char(reg_date, 'YYYY-MMDD HH:MI') as reg_date from board where no=#no#]]>
+	</select>
+
+<!-- <select id="search" parameterClass="String" resultClass="BoardVo">
+		<![CDATA[select no, view_cnt, member_name, title, TO_CHAR(reg_date, 'YYYY-MMDD HH:MM:SS') as reg_date, member_no from board where title like %#kwd#% or content like %#kwd#% or member_name like %#kwd#%]]>
+	</select>
+-->	
+
+	<select id="search" parameterClass="java.util.Map" resultClass="BoardVo">
+		<![CDATA[select * from ( select A.*, rownum as rnum, floor((rownum-1)/5+1) as page, count(*) over() as totcnt from( select * from board where title like '%'||#kwd#||'%' or content like '%'||#kwd#||'%' or member_name like '%'||#kwd#||'%' order by my_no desc, order_no) A) where page = #page#]]>
+	</select>
+
+	<insert id="insert" parameterClass="BoardVo">
+		<![CDATA[insert into board values (board_no_seq.nextval, #title#, #content#, #member_no#, #member_name#, 0, sysdate, 1, board_no_seq.currval, 0)]]>
+	</insert>
+	
+	<insert id="dapInsert" parameterClass="BoardVo">
+		<![CDATA[insert into board values (board_no_seq.nextval, #title#, #content#, #member_no#, #member_name#, 0, sysdate, #dap#, #my_no#, #order_no#)]]>
+	</insert>
+	
+	<insert id="reInsert" parameterClass="ReplyVo">
+		<![CDATA[insert into reply_board values (reply_no_seq.nextval, #content#, #member_no#, #post_no#, #member_name#, sysdate)]]>
+	</insert>
+	
+	<update id="plusCnt" parameterClass="Long">
+		<![CDATA[UPDATE board SET view_cnt=view_cnt+1 WHERE no=#no#]]>
+	</update>
+	
+	<update id="update" parameterClass="BoardVo">
+		<![CDATA[UPDATE board SET title=#title#, content=#content# WHERE no=#no#]]>
+	</update>
+	
+	<update id="dapUpdate" parameterClass="BoardVo">
+		<![CDATA[UPDATE board set order_no=order_no+1 where my_no =#my_no# and order_no!=0 and order_no>=#order_no#]]>
+	</update>
+	
+	<delete id="redelete" parameterClass="Long">
+		<![CDATA[DELETE FROM reply_board WHERE no=#no#]]>
+	</delete>
+	
+	<delete id="delete" parameterClass="Long">
+		<![CDATA[DELETE FROM board WHERE no=#no#]]>
+	</delete>
+	
+</sqlMap> 

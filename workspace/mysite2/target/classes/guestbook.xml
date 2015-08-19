@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="guestbook">
+	<typeAlias alias="GuestBookVo" type="com.bit2015.mysite2.vo.GuestBookVo" />
+
+	<select id="getList" resultClass="GuestBookVo">
+		<![CDATA[select no, name, password, content, to_char(reg_date, 'YYYY-MMDD HH:MI:SS') as reg_date from guest_table order by reg_date desc]]>
+	</select>
+
+	<select id="delSel" parameterClass="Long">
+		<![CDATA[select password from guest_table where no=#no#]]>
+	</select>
+
+	<delete id="delete" parameterClass="java.util.Map">
+		<![CDATA[DELETE FROM guest_table WHERE no=#no# AND password=#password#]]>
+	</delete>
+</sqlMap> 
