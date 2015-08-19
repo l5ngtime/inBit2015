@@ -19,7 +19,7 @@ public class EmailListController {
 	@Autowired
 	private EmailListDao emailListDao;
 	
-	@RequestMapping( "/list" )
+	@RequestMapping( "/" )
 	public String list( Model model ) {
 		try {
 			List<EmailListVo> list = emailListDao.getList();
@@ -30,12 +30,12 @@ public class EmailListController {
 			System.out.println( "DB Error:" + ex );
 		}	
 		
-		return "/WEB-INF/views/index.jsp";
+		return "list";
 	}
 	
 	@RequestMapping( "/inform" )
 	public String inform() {
-		return "/WEB-INF/views/form_emaillist.jsp";
+		return "form_emaillist";
 	}
 	
 	@RequestMapping("/add")
@@ -45,7 +45,7 @@ public class EmailListController {
 		} catch (SQLException e) {
 			System.out.println("db 오류 : " + e);
 		}
-		return "redirect:/list";
+		return "redirect:/";
 	}
 	
 }

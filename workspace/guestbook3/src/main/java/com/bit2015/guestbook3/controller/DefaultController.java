@@ -19,43 +19,29 @@ public class DefaultController {
 	@Autowired
 	private GuestBookDao dao;
 	
-	@RequestMapping("/list")
+	@RequestMapping("/")
 	public String list(Model model) {
-		try {
 			List <GuestBookVo> list = dao.getList();
 			model.addAttribute("list", list);
-			
-		} catch (SQLException e) {
-			System.out.println(" db 오류 : "+e);
-		}
-		
-		return "/WEB-INF/views/index.jsp";
+		return "index";
 
 	}
 	
 	@RequestMapping("/add")
 	public String form ( @ModelAttribute GuestBookVo vo){
-		try {
 			dao.insert(vo);
-		} catch (SQLException e) {
-			System.out.println("db 오류 : " + e);
-		}
-		return "redirect:/list";
+		return "redirect:/";
 	} 
 	
 	@RequestMapping("/delete")
 	public String delete ( @RequestParam int no, @RequestParam String password){
-		try {
 			dao.delete(no, password);
-		} catch (SQLException e) {
-			System.out.println("db 오류 : " + e);
-		}
-		return "redirect:/list";
+		return "redirect:/";
 	} 
 	
 	@RequestMapping("/delform&{no}")
 	public String delform ( @PathVariable("no") int no, Model model){
 		model.addAttribute("no", no);
-		return "/WEB-INF/views/deleteform.jsp";
+		return "deleteform";
 	} 
 }

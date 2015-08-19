@@ -22,4 +22,19 @@
 <context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
 </context:component-scan>
 
+	<!--  oracle datasource -->
+    <bean id="oracleDatasource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
+        <property name="URL" value="jdbc:oracle:thin:@localhost:1521:xe" />
+        <property name="user" value="bitdb"/>
+        <property name="password" value="bitdb"/>
+        <property name="connectionCachingEnabled" value="true"/>
+        <qualifier value="main-db"/>
+    </bean>
+    
+    <!--ibatis SqlMapClientFactoryBean --> 
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="oracleDatasource"/>
+		<property name="configLocation" value="classpath:SqlMapConfig.xml"/>
+	</bean>
+
 </beans>

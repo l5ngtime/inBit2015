@@ -21,7 +21,7 @@
 	</form>
 	<br>
 	<p>
-<a href="list">리스트 바로가기</a>
+<a href="/">리스트 바로가기</a>
 	</p>
 </body>
 </html>
